@@ -6,7 +6,7 @@ dependencies:
   - stage: kernel-build
 steps:
   - env:
-      ARCH: {{ if eq .ARCH "aarch64"}}arm64{{ else if eq .ARCH "x86_64" }}x86_64{{ else }}unsupported{{ end }}
+      ARCH: {{ if eq .ARCH "aarch64"}}arm64{{ else }}unsupported{{ end }}
     install:
       - |
         cd /src
@@ -16,9 +16,6 @@ steps:
         mkdir -p /rootfs/certs
 
         case $ARCH in
-            x86_64)
-                mv arch/x86/boot/bzImage /rootfs/boot/vmlinuz
-            ;;
             arm64)
                 mv arch/arm64/boot/vmlinuz.efi /rootfs/boot/vmlinuz
                 cd ./arch/arm64/boot/dts

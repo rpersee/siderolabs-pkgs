@@ -5,8 +5,8 @@ dependencies:
   - stage: kernel-prepare
 steps:
   - env:
-      CARCH: {{ if eq .ARCH "aarch64"}}arm64{{ else if eq .ARCH "x86_64" }}amd64{{ else }}unsupported{{ end }}
-      ARCH: {{ if eq .ARCH "aarch64"}}arm64{{ else if eq .ARCH "x86_64" }}x86{{ else }}unsupported{{ end }}
+      CARCH: {{ if eq .ARCH "aarch64"}}arm64{{ else }}unsupported{{ end }}
+      ARCH: {{ if eq .ARCH "aarch64"}}arm64{{ else }}unsupported{{ end }}
     prepare:
       - |
         cd /src
@@ -42,7 +42,7 @@ steps:
 finalize:
   {{ if .BUILD_ARG_KERNEL_TARGET }}
   - from: /src/.config
-    to: config-{{ if eq .ARCH "aarch64"}}arm64{{ else if eq .ARCH "x86_64" }}amd64{{ else }}unsupported{{ end }}
+    to: config-{{ if eq .ARCH "aarch64"}}arm64{{ else }}unsupported{{ end }}
   {{ else }}
   - from: /src
     to: /src

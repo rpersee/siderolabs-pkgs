@@ -89,6 +89,11 @@ vars:
   linux_sha256: d73bf057bec04434b169d1b61641936f7d0c97ceb923a281f32e35dd4dcc6531
   linux_sha512: cce6afef152b81daddaff0692d1d867778638934920700c6ef34b9063c72b438b5b1e273456a572cd5b223a67502faef32eec879c6374691ad9ba1df8d3a4603
 
+  # renovate: datasource=git-refs versioning=git depName=https://github.com/armbian/linux-rockchip.git
+  linux_rockchip_ref: 1a324b96cf07e314d70b48bd7945877c691074cc
+  linux_rockchip_sha256: 079f6ed7fd9deccfedba58ecea57dcbd90ee24a2fcf3aea0098ac914dec93bf3
+  linux_rockchip_sha512: 41dd2a0c093cf48b2f00d80be235e8073826fb3ced41eca086babcbaf43f43384d92564b095faa796fd0b4000c9de2e4e948317517bad269ff6f39275c967be7
+
   # renovate: datasource=git-tags extractVersion=^libaio-(?<version>.*)$ depName=https://pagure.io/libaio.git
   libaio_version: 0.3.113
   libaio_sha256: 2c44d1c5fd0d43752287c9ae1eb9c023f04ef848ea8d4aafa46e9aedb678200b
