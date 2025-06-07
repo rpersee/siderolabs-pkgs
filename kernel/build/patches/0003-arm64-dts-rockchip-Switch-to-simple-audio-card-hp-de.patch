@@ -1,0 +1,33 @@
+From 7ac5c0a592f73fdc52393f6469ce8211ff3e771f Mon Sep 17 00:00:00 2001
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Date: Fri, 27 Sep 2024 14:42:21 +0200
+Subject: [PATCH 3/7] arm64: dts: rockchip: Switch to
+ simple-audio-card,hp-det-gpios
+
+Replace the deprecated "simple-audio-card,hp-det-gpio" property by
+"simple-audio-card,hp-det-gpios" in Simple Audio Card device nodes.
+
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+Link: https://lore.kernel.org/r/c976b09c6048564737321cf91c3f97b9da5dbfe8.1727438777.git.geert+renesas@glider.be
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+---
+ arch/arm64/boot/dts/rockchip/rk3588-orangepi-5-plus.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/rockchip/rk3588-orangepi-5-plus.dts b/arch/arm64/boot/dts/rockchip/rk3588-orangepi-5-plus.dts
+index f8cbed3e2065..c73fecf1c73c 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3588-orangepi-5-plus.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3588-orangepi-5-plus.dts
+@@ -120,7 +120,7 @@ sound {
+ 		simple-audio-card,aux-devs = <&speaker_amp>, <&headphone_amp>;
+ 		simple-audio-card,format = "i2s";
+ 		simple-audio-card,mclk-fs = <256>;
+-		simple-audio-card,hp-det-gpio = <&gpio1 RK_PD3 GPIO_ACTIVE_LOW>;
++		simple-audio-card,hp-det-gpios = <&gpio1 RK_PD3 GPIO_ACTIVE_LOW>;
+ 		simple-audio-card,bitclock-master = <&daicpu>;
+ 		simple-audio-card,frame-master = <&daicpu>;
+ 		/*TODO: SARADC_IN3 is used as MIC detection / key input */
+-- 
+2.43.0
+
