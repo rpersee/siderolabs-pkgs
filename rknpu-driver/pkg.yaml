@@ -1,0 +1,51 @@
+name: rknpu-driver-pkg
+variant: scratch
+shell: /bin/bash
+dependencies:
+  - stage: base
+  - stage: kernel-build
+steps:
+  - sources:
+      - url: https://github.com/armbian/linux-rockchip/archive/{{ .linux_rockchip_ref }}.tar.gz
+        destination: linux-rockchip.tar.gz
+        sha256: "{{ .linux_rockchip_sha256 }}"
+        sha512: "{{ .linux_rockchip_sha512 }}"
+    env:
+      ARCH: {{ if eq .ARCH "aarch64"}}arm64{{ else }}unsupported{{ end }}
+    prepare:
+      - |
+        tar xf linux-rockchip.tar.gz --strip-components=1
+      - |
+        make rockchip_linux_defconfig
+        scripts/config --module CONFIG_ROCKCHIP_RKNPU
+        scripts/config --enable CONFIG_PM_DEVFREQ
+        scripts/config --enable CONFIG_ROCKCHIP_RKNPU_SRAM
+        scripts/config --enable CONFIG_ROCKCHIP_RKNPU_FENCE
+        scripts/config --enable CONFIG_ROCKCHIP_RKNPU_DRM_GEM
+        scripts/config --enable CONFIG_ROCKCHIP_RKNPU_DMA_HEAP
+        make olddefconfig
+      - |
+        make -C /src modules_prepare
+    build:
+      - |
+        cd drivers/rknpu
+        make -C /src M=$(pwd) -j $(nproc) modules
+    install:
+      - |
+        cd drivers/rknpu
+
+        mkdir -p /rootfs/usr/lib/modules/$(cat /src/include/config/kernel.release)/
+        cp /src/modules.order /rootfs/usr/lib/modules/$(cat /src/include/config/kernel.release)/
+        cp /src/modules.builtin /rootfs/usr/lib/modules/$(cat /src/include/config/kernel.release)/
+        cp /src/modules.builtin.modinfo /rootfs/usr/lib/modules/$(cat /src/include/config/kernel.release)/
+
+        make -C /src M=$(pwd) modules_install INSTALL_MOD_PATH=/rootfs/usr INSTALL_MOD_DIR=extras INSTALL_MOD_STRIP=1 CONFIG_MODULE_SIG_ALL=y
+    test:
+      - |
+        # https://www.kernel.org/doc/html/v4.15/admin-guide/module-signing.html#signed-modules-and-stripping
+        find /rootfs/usr/lib/modules -name '*.ko' -exec grep -FL '~Module signature appended~' {} \+
+      - |
+        fhs-validator /rootfs
+finalize:
+  - from: /rootfs
+    to: /
