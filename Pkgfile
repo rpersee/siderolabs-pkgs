@@ -205,6 +205,11 @@ vars:
   qemu_sha256: baed494270c361bf69816acc84512e3efed71c7a23f76691642b80bc3de7693e
   qemu_sha512: 941a4337a115c65de2fca042932efb31886114f4300226fcf55f04c2c5471bd2b5ce220c4b17e01c3679bd55ba08a1aa7ce399de15e3e5f28c17da52030b139e
 
+  # renovate: datasource=git-refs versioning=git depName=https://github.com/armbian/linux-rockchip.git
+  linux_rockchip_ref: 54c210d3bf468ec329d6ae92aedcf9e10c447572
+  linux_rockchip_sha256: 940b4b5f38798e1043672294f40e61889b12fd76b8416c3df435c787ec0b51ae
+  linux_rockchip_sha512: abfe9aa3d51dc8a305c0b036c498326810a49658d59e24350d13e8d7b2feb4daffe42d0604a15b64a65868e1d6396e1eef32a672d36d0c847ae4f7a26f7a3219
+
   # renovate: datasource=github-tags depName=opencontainers/runc
   runc_version: v1.2.6
   runc_ref: e89a29929c775025419ab0d218a43588b4c12b9a
