@@ -17,6 +17,10 @@ steps:
         tar xf linux-rockchip.tar.gz --strip-components=1
       - |
         scripts/config --file /src/.config --module CONFIG_ROCKCHIP_RKNPU
+        grep -q CONFIG_ROCKCHIP_RKNPU /src/.config || {
+          echo "CONFIG_ROCKCHIP_RKNPU is not enabled in the kernel configuration."
+          exit 1
+        }
     build:
       - |
         cd drivers/rknpu
@@ -24,7 +28,16 @@ steps:
     install:
       - |
         cd drivers/rknpu
-        mkdir -p /rootfs/usr/lib/modules/$(cat /src/include/config/kernel.release)
+
+        find . -name '*.ko' || {
+          echo "No kernel modules found in drivers/rknpu. Check the build process."
+          exit 1
+        }
+
+        mkdir -p /rootfs/usr/lib/modules/$(cat /src/include/config/kernel.release)/
+        cp /src/modules.order /rootfs/usr/lib/modules/$(cat /src/include/config/kernel.release)/
+        cp /src/modules.builtin /rootfs/usr/lib/modules/$(cat /src/include/config/kernel.release)/
+        cp /src/modules.builtin.modinfo /rootfs/usr/lib/modules/$(cat /src/include/config/kernel.release)/
 
         make -C /src M=$(pwd) modules_install INSTALL_MOD_PATH=/rootfs/usr INSTALL_MOD_DIR=extras INSTALL_MOD_STRIP=1 CONFIG_MODULE_SIG_ALL=y
     test:
