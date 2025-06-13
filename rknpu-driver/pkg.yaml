@@ -19,12 +19,8 @@ steps:
         scripts/config --file /src/.config --module CONFIG_ROCKCHIP_RKNPU
     build:
       - |
-        echo "BEGIN CHECK"
-        grep CONFIG_ROCKCHIP_RKNPU /src/.config >&2
-        grep CONFIG_ROCKCHIP_RKNPU /src/.config 2>&1
-        echo "END CHECK"
         cd drivers/rknpu
-        make -C /src M=$(pwd) modules -j $(nproc) 2>&1
+        V=1 make -C /src M=$(pwd) modules -j $(nproc)
     install:
       - |
         cd drivers/rknpu
