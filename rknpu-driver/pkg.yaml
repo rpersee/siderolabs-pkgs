@@ -16,28 +16,15 @@ steps:
       - |
         tar xf linux-rockchip.tar.gz --strip-components=1
       - |
-        make rockchip_linux_defconfig
-        scripts/config --module CONFIG_ROCKCHIP_RKNPU
-        scripts/config --enable CONFIG_PM_DEVFREQ
-        scripts/config --enable CONFIG_ROCKCHIP_RKNPU_SRAM
-        scripts/config --enable CONFIG_ROCKCHIP_RKNPU_FENCE
-        scripts/config --enable CONFIG_ROCKCHIP_RKNPU_DRM_GEM
-        scripts/config --enable CONFIG_ROCKCHIP_RKNPU_DMA_HEAP
-        make olddefconfig
-      - |
-        make -C /src modules_prepare
+        scripts/config --file /src/.config --module CONFIG_ROCKCHIP_RKNPU
     build:
       - |
         cd drivers/rknpu
-        make -C /src M=$(pwd) -j $(nproc) modules
+        make -C /src M=$(pwd) modules -j $(nproc)
     install:
       - |
         cd drivers/rknpu
-
-        mkdir -p /rootfs/usr/lib/modules/$(cat /src/include/config/kernel.release)/
-        cp /src/modules.order /rootfs/usr/lib/modules/$(cat /src/include/config/kernel.release)/
-        cp /src/modules.builtin /rootfs/usr/lib/modules/$(cat /src/include/config/kernel.release)/
-        cp /src/modules.builtin.modinfo /rootfs/usr/lib/modules/$(cat /src/include/config/kernel.release)/
+        mkdir -p /rootfs/usr/lib/modules/$(cat /src/include/config/kernel.release)
 
         make -C /src M=$(pwd) modules_install INSTALL_MOD_PATH=/rootfs/usr INSTALL_MOD_DIR=extras INSTALL_MOD_STRIP=1 CONFIG_MODULE_SIG_ALL=y
     test:
