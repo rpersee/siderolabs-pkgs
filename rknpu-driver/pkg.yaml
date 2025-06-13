@@ -16,40 +16,15 @@ steps:
       - |
         tar xf linux-rockchip.tar.gz --strip-components=1
       - |
-        sleep 1
-        if [ ! -f /src/.config ]; then
-          echo "Kernel configuration file not found at /src/.config. Please ensure it exists."
-          echo "Kernel configuration file not found at /src/.config. Please ensure it exists." >&2
-          exit 1
-        fi
         scripts/config --file /src/.config --module CONFIG_ROCKCHIP_RKNPU
-        grep -q CONFIG_ROCKCHIP_RKNPU /src/.config || {
-          echo "CONFIG_ROCKCHIP_RKNPU is not enabled in the kernel configuration."
-          echo "CONFIG_ROCKCHIP_RKNPU is not enabled in the kernel configuration." >&2
-          exit 1
-        }
-        sleep 1
     build:
       - |
-        cd drivers/rknpu
-        make -C /src M=$(pwd) modules -j $(nproc) 2>&1 | tee build.log
-        cat build.log >&2
-        cat build.log >${GITHUB_STEP_SUMMARY:-/dev/null}
-      - |
-        sleep 1
-        ls -lr drivers/rknpu
-        sleep 1
-        ls -lr drivers/rknpu >&2
-        sleep 1
-        ls -lr drivers/rknpu >${GITHUB_STEP_SUMMARY:-/dev/null}
+        grep CONFIG_ROCKCHIP_RKNPU /src/.config >&2
+        grep CONFIG_ROCKCHIP_RKNPU /src/.config 2>&1
+        make -C /src M=$(pwd) modules -j $(nproc) 2>&1
     install:
       - |
         cd drivers/rknpu
-
-        find . -name '*.ko' || {
-          echo "No kernel modules found in drivers/rknpu. Check the build process." >&2
-          exit 1
-        }
 
         mkdir -p /rootfs/usr/lib/modules/$(cat /src/include/config/kernel.release)/
         cp /src/modules.order /rootfs/usr/lib/modules/$(cat /src/include/config/kernel.release)/
