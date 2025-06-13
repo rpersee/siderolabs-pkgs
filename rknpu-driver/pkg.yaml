@@ -32,7 +32,16 @@ steps:
     build:
       - |
         cd drivers/rknpu
-        make -C /src M=$(pwd) modules -j $(nproc)
+        make -C /src M=$(pwd) modules -j $(nproc) 2>&1 | tee build.log
+        cat build.log >&2
+        cat build.log >${GITHUB_STEP_SUMMARY:-/dev/null}
+      - |
+        sleep 1
+        ls -lr drivers/rknpu
+        sleep 1
+        ls -lr drivers/rknpu >&2
+        sleep 1
+        ls -lr drivers/rknpu >${GITHUB_STEP_SUMMARY:-/dev/null}
     install:
       - |
         cd drivers/rknpu
