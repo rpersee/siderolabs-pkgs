@@ -16,15 +16,19 @@ steps:
       - |
         tar xf linux-rockchip.tar.gz --strip-components=1
       - |
+        sleep 1
         if [ ! -f /src/.config ]; then
+          echo "Kernel configuration file not found at /src/.config. Please ensure it exists."
           echo "Kernel configuration file not found at /src/.config. Please ensure it exists." >&2
           exit 1
         fi
         scripts/config --file /src/.config --module CONFIG_ROCKCHIP_RKNPU
         grep -q CONFIG_ROCKCHIP_RKNPU /src/.config || {
+          echo "CONFIG_ROCKCHIP_RKNPU is not enabled in the kernel configuration."
           echo "CONFIG_ROCKCHIP_RKNPU is not enabled in the kernel configuration." >&2
           exit 1
         }
+        sleep 1
     build:
       - |
         cd drivers/rknpu
