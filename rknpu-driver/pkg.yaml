@@ -16,11 +16,15 @@ steps:
       - |
         tar xf linux-rockchip.tar.gz --strip-components=1
       - |
-        scripts/config --file /src/.config --module CONFIG_ROCKCHIP_RKNPU
+        find drivers/ -name 'Makefile' -exec grep -l CONFIG_ROCKCHIP_RKNPU {} \; | xargs -L1 sed -i 's/$(CONFIG_ROCKCHIP_RKNPU)/y/g'
     build:
       - |
         cd drivers/rknpu
-        V=1 make -C /src M=$(pwd) modules -j $(nproc)
+        make -C /src M=$(pwd) modules -j $(nproc)
+        find drivers/rknpu -name '*.ko' || {
+          echo "ERROR: No kernel modules found in drivers/rknpu"
+          exit 1
+        }
     install:
       - |
         cd drivers/rknpu
