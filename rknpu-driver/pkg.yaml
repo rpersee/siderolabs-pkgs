@@ -21,7 +21,7 @@ steps:
       - |
         cd drivers/rknpu
         make -C /src M=$(pwd) modules -j $(nproc)
-        find drivers/rknpu -name '*.ko' || {
+        find . -name '*.ko' || {
           echo "ERROR: No kernel modules found in drivers/rknpu"
           exit 1
         }
