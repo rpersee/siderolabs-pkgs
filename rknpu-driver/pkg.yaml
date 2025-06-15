@@ -25,6 +25,7 @@ steps:
           echo "ERROR: No kernel modules found in drivers/rknpu"
           exit 1
         }
+        ls -la
     install:
       - |
         cd drivers/rknpu
