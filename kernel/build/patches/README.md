@@ -2,3 +2,5 @@
 | ------------------------------------ | --------------------------------------------------------------- | --------------- | ----------------------------------------------- |
 | mglru.patch                          | Backport fixes for OOM in memory-constrained cgroups on fast IO | in 6.13         | Commit 1bc542c6a0d1444559ab75823a89a94d244bf933 |
 | 000{1..7}-arm64-dts-rockchip-*.patch | Backport features from Linux 6.13 for the Orange Pi 5 Plus      | in 6.13         | Commit range a4dca88c9c3a..bea70269e9d4         |
+| 100{1..2}-arm64-dts-rockchip-*.patch | Port Rockchip NPU node support in rk3588-base DTSI              | @tomeu fork     | Commit range a6d708809579..731c7cec6d50         |
+| 2001-*-NPU-on-orangepi-5-plus.patch  | Enable the NPU node for the Orange Pi 5 Plus                    | n/a             | n/a                                             |
