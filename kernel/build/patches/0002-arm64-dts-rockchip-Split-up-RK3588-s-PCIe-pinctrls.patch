@@ -27,7 +27,8 @@ Link: https://lore.kernel.org/r/20240912025034.180233-2-CFSworks@gmail.com
 Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 ---
  .../dts/rockchip/rk3588-base-pinctrl.dtsi     | 271 ++++++++++++++----
- 1 file changed, 223 insertions(+), 48 deletions(-)
+ .../boot/dts/rockchip/rk3588s-rock-5a.dts     |   6 +-
+ 2 files changed, 228 insertions(+), 49 deletions(-)
 
 diff --git a/arch/arm64/boot/dts/rockchip/rk3588-base-pinctrl.dtsi b/arch/arm64/boot/dts/rockchip/rk3588-base-pinctrl.dtsi
 index d1368418502a..7f874c77410c 100644
@@ -425,6 +426,30 @@ index d1368418502a..7f874c77410c 100644
  				/* pcie30x4_waken_m3 */
  				<1 RK_PB1 4 &pcfg_pull_none>;
  		};
+diff --git a/arch/arm64/boot/dts/rockchip/rk3588s-rock-5a.dts b/arch/arm64/boot/dts/rockchip/rk3588s-rock-5a.dts
+index 294b99dd50da..87fce8d9a964 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3588s-rock-5a.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3588s-rock-5a.dts
+@@ -310,7 +310,7 @@ rgmii_phy1: ethernet-phy@1 {
+ };
+ 
+ &pcie2x1l2 {
+-	pinctrl-0 = <&pcie20x1m0_pins>;
++	pinctrl-0 = <&pcie2_reset>, <&pcie20x1m0_clkreqn>, <&pcie20x1m0_waken>;
+ 	pinctrl-names = "default";
+ 	reset-gpios = <&gpio3 RK_PD1 GPIO_ACTIVE_HIGH>;
+ 	vpcie3v3-supply = <&vcc3v3_wf>;
+@@ -328,6 +328,10 @@ pcie {
+ 		pow_en: pow-en {
+ 			rockchip,pins = <0 RK_PC5 RK_FUNC_GPIO &pcfg_pull_none>;
+ 		};
++
++		pcie2_reset: pcie2-reset {
++			rockchip,pins = <3 RK_PD1 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
+ 	};
+ 
+ 	power {
 -- 
 2.43.0
 
