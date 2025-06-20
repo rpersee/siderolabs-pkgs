@@ -1,0 +1,49 @@
+diff --git a/drivers/accel/rocket/rocket_job.c b/drivers/accel/rocket/rocket_job.c
+index e5f04e2eff75..7ad378bd42f3 100644
+--- a/drivers/accel/rocket/rocket_job.c
++++ b/drivers/accel/rocket/rocket_job.c
+@@ -418,7 +418,7 @@ rocket_reset(struct rocket_core *core, struct drm_sched_job *bad)
+ 	cookie = dma_fence_begin_signalling();
+ 
+ 	/* Restart the scheduler */
+-	drm_sched_start(&core->sched, 0);
++	drm_sched_start(&core->sched);
+ 
+ 	dma_fence_end_signalling(cookie);
+ }
+@@ -502,14 +502,6 @@ static irqreturn_t rocket_job_irq_handler(int irq, void *data)
+ 
+ int rocket_job_init(struct rocket_core *core)
+ {
+-	struct drm_sched_init_args args = {
+-		.ops = &rocket_sched_ops,
+-		.num_rqs = DRM_SCHED_PRIORITY_COUNT,
+-		.credit_limit = 1,
+-		.timeout = msecs_to_jiffies(JOB_TIMEOUT_MS),
+-		.name = dev_name(core->dev),
+-		.dev = core->dev,
+-	};
+ 	int ret;
+ 
+ 	INIT_WORK(&core->reset.work, rocket_reset_work);
+@@ -535,8 +527,18 @@ int rocket_job_init(struct rocket_core *core)
+ 
+ 	core->fence_context = dma_fence_context_alloc(1);
+ 
+-	args.timeout_wq = core->reset.wq;
+-	ret = drm_sched_init(&core->sched, &args);
++	ret = drm_sched_init(
++			&core->sched,
++			&rocket_sched_ops,
++			NULL, // submit_wq
++			DRM_SCHED_PRIORITY_COUNT,
++			1,
++			1, // hang_limit
++			msecs_to_jiffies(JOB_TIMEOUT_MS),
++			core->reset.wq,
++			NULL, // score
++			dev_name(core->dev),
++			core->dev);
+ 	if (ret) {
+ 		dev_err(core->dev, "Failed to create scheduler: %d.", ret);
+ 		goto err_sched;

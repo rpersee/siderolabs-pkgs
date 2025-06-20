@@ -1,0 +1,13 @@
+diff --git a/drivers/accel/rocket/rocket_drv.c b/drivers/accel/rocket/rocket_drv.c
+index adc142facdb3..ea5d8c8d0e48 100644
+--- a/drivers/accel/rocket/rocket_drv.c
++++ b/drivers/accel/rocket/rocket_drv.c
+@@ -1,7 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /* Copyright 2024-2025 Tomeu Vizoso <tomeu@tomeuvizoso.net> */
+ 
+-#include "linux/device/devres.h"
++#include "linux/device.h"
+ #include "linux/gfp_types.h"
+ #include <drm/drm_accel.h>
+ #include <drm/drm_drv.h>
